@@ -1,0 +1,11 @@
+#env
+card_backend/.env
+
+#pycaches
+card_backend/__pycache__
+app/__pycache__
+
+#migrations
+card_backend/migrations
+app/migrations
+

@@ -8,93 +8,55 @@ class CustomUser(models.Model):
         "blank":"Email field can\'t be blank"
     })
     password=models.CharField(max_length=400, null=False, blank=False)
-    reference=models.CharField(max_length=400, null=True, blank=True)
-    paid=models.BooleanField()
-
-"""
-q: for transaction models should have those fieldsamount
-required
-string
-This is amount that will be charged from the given account.
-
-currencyCode
-required
-string
-Code of currency
-
-merchantAccountNumber
-required
-string
-This is the account number/MSISDN that consumer will provide. The amount will be deducted from this account.
-
-merchantMobileNumber
-required
-string
-Mobile number
-
-merchantName
-string or null
-The name of consumer
-
-otp
-required
-string
-One time password
-
-provider
-required
-string (BankProvider)
-Enum: "CRDB" "NMB"
-referenceId
-string or null
-This id belongs to the calling application. Maximum Allowed length for this field is 128 ascii characters
-"""
-#  {'message': 'SUCCESS', 'user': None, 'password': None, 'clientId': None, 'transactionstatus': 'success', 'operator': 'Halopesa', 'reference': 'b6aa2edd7fa34731938fa1deadb4e8b2', 'externalreference': 'b6aa2edd7fa34731938fa1deadb4e8b2', 'utilityref': '1234', 'amount': '1000', 'transid': 'b6aa2edd7fa34731938fa1deadb4e8b2', 'msisdn': '0628630936', 'mnoreference': 'c6cef289-e49e-45b2-807d-30d2aa1eae08', 'submerchantAcc': None, 'additionalProperties': {}}
-# message, user, password, clientId, submerchantAcc, additionalProperties
-class UserData(models.Model):
-    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    first_name=models.CharField(max_length=128)
-    surname=models.CharField(max_length=128)
-    email=models.EmailField(blank=False,null=False, unique=True, error_messages={
-        'unique':"Email already exists, Please enter another one!",
-        "blank":"Email field can\'t be blank"
+    phone = models.CharField(max_length=20, null=False, blank=False, error_messages={
+        "blank":"Phone field can\'t be blank",
+        "null":"Phone field can\'t be null"
         })
-    phone_number=models.CharField(max_length=20)
-    college_name=models.CharField(max_length=128)
-    course_name=models.CharField(max_length=128)
-    date_of_birth=models.DateField()
-    membership_no=models.CharField(max_length=128)
-    gender=models.CharField(max_length=128)
+    category = models.CharField(max_length=400, null=False, blank=False, choices=( ("client", "client"), ("agent", "agent") ), error_messages={
+        "blank":"Category field can\'t be blank",
+        "null":"Category field can\'t be null",
+        "choices":"Category field can only be client or agent"
+        })
+    created_at=models.DateTimeField(auto_now_add=True)
+#q: I am creating modals for a package delivery system
 
-class Transaction(models.Model):
+class ProductRegistrationModal(models.Model):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    transactionstatus=models.CharField(max_length=20)
-    operator=models.CharField(max_length=20)
-    reference=models.CharField(max_length=128)
-    externalreference=models.CharField(max_length=128)
-    utilityref=models.CharField(max_length=128)
-    amount=models.FloatField()
-    transid=models.CharField(max_length=128)
-    msisdn=models.CharField(max_length=20)
-    mnoreference=models.CharField(max_length=128)
+    client_id=models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    category=models.CharField(max_length=400, null=False, blank=False)
+    senderName=models.CharField(max_length=400, null=False, blank=False)
+    senderPhone=models.CharField(max_length=400, null=False, blank=False)
+    receiverName=models.CharField(max_length=400, null=False, blank=False)
+    receiverPhone=models.CharField(max_length=400, null=False, blank=False)
+    senderLocation=models.TextField(null=False, blank=False)
+    receiverLocation=models.TextField(null=False, blank=False)
+    created_at=models.DateTimeField(auto_now_add=True)
+    
+
+class TransportRequestModal(models.Model):
+    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product=models.ForeignKey(ProductRegistrationModal, on_delete=models.CASCADE)
+    client=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="client")
+    agent=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="agent")
+    status=models.CharField(max_length=400, null=False, blank=False, choices=( ("pending", "pending"), ("accepted", "accepted"), ("rejected", "rejected"), ("delivered", "delivered") ), error_messages={
+        "blank":"Status field can\'t be blank",
+        "null":"Status field can\'t be null",
+        "choices":"Status field can only be pending, accepted, rejected or delivered"
+        })
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
-
-class TransactionRecords(models.Model):
+class TrackDeliveryModal(models.Model):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    transactionstatus=models.CharField(max_length=20)
-    operator=models.CharField(max_length=20)
-    reference=models.CharField(max_length=128)
-    externalreference=models.CharField(max_length=128)
-    utilityref=models.CharField(max_length=128)
-    amount=models.FloatField()
-    transid=models.CharField(max_length=128)
-    msisdn=models.CharField(max_length=20)
-    mnoreference=models.CharField(max_length=128)
+    transport_request=models.ForeignKey(TransportRequestModal, on_delete=models.CASCADE)
+    location=models.TextField(null=False, blank=False)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
+class FeedbackModal(models.Model):
+    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    transport_request=models.ForeignKey(TransportRequestModal, on_delete=models.CASCADE)
+    rating=models.IntegerField(null=False, blank=False)
+    comment=models.TextField(null=False, blank=False)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)

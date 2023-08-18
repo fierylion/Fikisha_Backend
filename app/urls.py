@@ -1,43 +1,62 @@
 from django.urls import path
-from .views import UserView, PaymentOperationView
+from .views import ClientView, AgentView
 app_urls = [
-    path('register', UserView.as_view(
+    path('register/customer', ClientView.as_view(
         {
             'post': 'create_single_user'
         }
     )),
     path(
-        'login', UserView.as_view(
+        'login/customer', ClientView.as_view(
             {
                 'post': 'login_single_user'
             }
         )
     ),
-    path('user/details', UserView.as_view(
-        {
-            'post': 'save_details'
-        }
-    )),
-    path('user/info', UserView.as_view(
-        {
-            'get': 'get_info'
-        }
-    )),
-    path('user/send_email', UserView.as_view(
-        {
-            'post': 'send_email'
-        }
-    )),
-    path('user/payment/generate', PaymentOperationView.as_view(
-        {
-            'post': 'create_payment_link'
-        }
-    )
+    path(
+        'customer', ClientView.as_view(
+            {
+                'get':'get_details'
+            }
+        )
     ),
-    path('user/payment/callback', PaymentOperationView.as_view(
+    path(
+        'customer/order', ClientView.as_view(
+            {
+                'post':'create_order',
+                'get':'get_orders'
+            }
+        )
+    ),
+    
+    #Agent
+    path('register/agent', AgentView.as_view(
         {
-            'post': 'receive_callback'
+            'post': 'create_single_user'
         }
     )),
+    path(
+        'login/agent', AgentView.as_view(
+            {
+                'post': 'login_single_user'
+            }
+        )
+    ),
+     path(
+        'agent', AgentView.as_view(
+            {
+                'get':'get_details'
+            }
+        )
+    ),
+
+    path(
+        'agent/orders', AgentView.as_view(
+            {
+                'get':'get_orders'
+            }
+        )
+    ),
+
     
 ]

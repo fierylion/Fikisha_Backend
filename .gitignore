@@ -1,6 +1,9 @@
 #env
 card_backend/.env
 
+#venv
+venv
+
 #pycaches
 card_backend/__pycache__
 app/__pycache__

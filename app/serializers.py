@@ -1,20 +1,24 @@
-from .models import CustomUser, Transaction, TransactionRecords, UserData
+from .models import CustomUser, ProductRegistrationModal, TransportRequestModal, TrackDeliveryModal, FeedbackModal
 from rest_framework import serializers
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
-class TransactionSerializer(serializers.ModelSerializer):
+class ProductRegistrationModalSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Transaction
+        model = ProductRegistrationModal
         fields = '__all__'
-class TransactionRecordsSerializer(serializers.ModelSerializer):
+class TransportRequestModalSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TransactionRecords
+        model = TransportRequestModal
         fields = '__all__'
-class UserDataSerializer(serializers.ModelSerializer):
+class TrackDeliveryModalSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserData
+        model = TrackDeliveryModal
         fields = '__all__'
-
+class FeedbackModalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedbackModal
+        fields = '__all__'
+        
 

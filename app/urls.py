@@ -57,6 +57,21 @@ app_urls = [
             }
         )
     ),
+    path(
+        'agent/order/accept/<str:order_id>', AgentView.as_view(
+            {
+                'get':'accept_order',
+               
+            }
+        )
+    ),
+    path(
+        'agent/order/deliver', AgentView.as_view(
+            {
+                'get':'get_accepted_orders',
+            }
+        )
+    ),
 
     
 ]

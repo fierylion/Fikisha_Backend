@@ -35,10 +35,10 @@ class ProductRegistrationModal(models.Model):
 
 class TransportRequestModal(models.Model):
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product=models.ForeignKey(ProductRegistrationModal, on_delete=models.CASCADE)
-    client=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="client")
+    product=models.OneToOneField(ProductRegistrationModal, on_delete=models.CASCADE)
+    
     agent=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="agent")
-    status=models.CharField(max_length=400, null=False, blank=False, choices=( ("pending", "pending"), ("accepted", "accepted"), ("rejected", "rejected"), ("delivered", "delivered") ), error_messages={
+    status=models.CharField(max_length=400, null=False, blank=False, choices=( ("pending", "pending"),  ("delivered", "delivered") ), error_messages={
         "blank":"Status field can\'t be blank",
         "null":"Status field can\'t be null",
         "choices":"Status field can only be pending, accepted, rejected or delivered"

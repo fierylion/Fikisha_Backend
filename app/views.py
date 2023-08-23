@@ -10,8 +10,6 @@ import jwt
 from django.forms import model_to_dict
 
 
-    
-
 
 class ClientView(ViewSet):
     def create_single_user(self, request):
@@ -65,10 +63,20 @@ class ClientView(ViewSet):
             return Response({"status":"success"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get_orders(self, request):
+        def get_transport_fields(item):
+            try:
+                return model_to_dict(item.transportrequestmodal)
+            except Exception as err:
+                return None
+        
         user=request.user_details
-        orders=ProductRegistrationModal.objects.filter(client_id=user)
-        serializer = ProductRegistrationModalSerializer(orders, many=True)
-        return Response({"orders":serializer.data, "status":"success"}, status=status.HTTP_200_OK)
+        orders=ProductRegistrationModal.objects.select_related('transportrequestmodal').filter(client_id=user)
+        data = []
+        for item in orders:
+            data.append({**model_to_dict(item),
+            "transport":get_transport_fields(item)
+                         })
+        return Response({"orders": data, "status":"success"}, status=status.HTTP_200_OK)
 
 
                 
@@ -109,6 +117,7 @@ class AgentView(ViewSet):
     def get_details(self, request):
         user=request.user_details
         user_data=model_to_dict(user)
+       
         #orders
         orders=0
         #successful orders
@@ -116,9 +125,33 @@ class AgentView(ViewSet):
 
 
         del user_data["password"]
-        return Response({"agent":user_data, "successfull_orders":successfull_orders,"orders":orders,  "status":"success"}, status=status.HTTP_200_OK)
+        return Response({'id':user.id,"agent":user_data, "successfull_orders":successfull_orders,"orders":orders,  "status":"success"}, status=status.HTTP_200_OK)
+    def accept_order(self, request, order_id):
+        user=request.user_details
+        
+        if(order_id):
+            order=TransportRequestModal.objects.filter(product=str(order_id)).first()
+            if(not order):
+                try:
+                    trans =  TransportRequestModal.objects.create(product=ProductRegistrationModal.objects.get(id=order_id), agent=user, status="pending")
+                    order = trans.save()
+                    return Response({"status":"success", 'order':order}, status=status.HTTP_201_CREATED)
+                except Exception as err:
+                    print(err)
+                    return Response({"msg":"Order ID does not exist!", "status":"failed"}, status=status.HTTP_400_BAD_REQUEST)
+                
+               
+            return Response({"msg":"Order already exist!", "status":"failed"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"msg":"Please provide order id!"}, status=status.HTTP_400_BAD_REQUEST)
+
     def get_orders(self, request):
         user=request.user_details
         orders=ProductRegistrationModal.objects.all()
         serializer = ProductRegistrationModalSerializer(orders, many=True)
         return Response({"orders":serializer.data, "status":"success"}, status=status.HTTP_200_OK)
+    def get_accepted_orders(self, request):
+        user=request.user_details
+        orders=TransportRequestModal.objects.filter(agent=user)
+        serializer = TransportRequestModalSerializer(orders, many=True)
+        return Response({"orders":serializer.data, "status":"success"}, status=status.HTTP_200_OK)
+    

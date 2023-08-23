@@ -9,9 +9,13 @@ class ProductRegistrationModalSerializer(serializers.ModelSerializer):
         model = ProductRegistrationModal
         fields = '__all__'
 class TransportRequestModalSerializer(serializers.ModelSerializer):
+    product = ProductRegistrationModalSerializer()
     class Meta:
         model = TransportRequestModal
         fields = '__all__'
+    def create(self, validated_data):
+        print(validated_data)
+        return TransportRequestModal.objects.create(**validated_data)
 class TrackDeliveryModalSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackDeliveryModal

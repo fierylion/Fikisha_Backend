@@ -10,8 +10,7 @@ services:
              daphne -b 0.0.0.0 -p 8000 card_backend.asgi:application"
     ports:
       - 8000:8000
-    environment:
-      - REDIS_NETWORK=redis
+
     depends_on:
       - redis
   redis:

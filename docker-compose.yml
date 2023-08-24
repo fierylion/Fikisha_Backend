@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c "python manage.py migrate &&
-             gunicorn publication.wsgi:application --bind 0.0.0.0:$PORT"
+             daphne -b 0.0.0.0 -p $PORT card_backend.asgi:application"
     ports:
       - 8000:8000
     depends_on:

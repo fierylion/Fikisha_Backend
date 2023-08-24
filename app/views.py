@@ -49,7 +49,7 @@ class ClientView(ViewSet):
         #orders
         orders=ProductRegistrationModal.objects.filter(client_id=user).count()
         #successful orders
-        successfull_orders = TransportRequestModal.objects.filter(client=user,  status='delivered').count()
+        successfull_orders = TransportRequestModal.objects.filter(agent=user,  status='delivered').count()
 
 
         del user_data["password"]

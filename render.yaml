@@ -1,0 +1,6 @@
+services:
+  - type: redis
+    name: my-redis
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere

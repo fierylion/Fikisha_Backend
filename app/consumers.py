@@ -23,7 +23,7 @@ class LocationConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         latitude = data['latitude']
         longitude = data['longitude']
-
+        print(latitude, longitude)
         # Broadcast location update to room group
         await self.channel_layer.group_send(
             self.room_group_name,

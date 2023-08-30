@@ -7,8 +7,12 @@ services:
       dockerfile: Dockerfile
     environment:
       - HOST=${HOST}
-      - USER=${USER}
+      - USER=${USER_NAME}
       - PASSWORD=${PASSWORD}
+      - DB_PORT=${DB_PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - NAME=${NAME}
     command: >
       sh -c "python manage.py migrate &&
              daphne -b 0.0.0.0 -p 8000 card_backend.asgi:application"

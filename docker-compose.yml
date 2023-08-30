@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - HOST=publications.cj2olckjerwl.eu-north-1.rds.amazonaws.com
-      - USER=fierylion
+      - USER=${USER}
       - PASSWORD=fierylion
     command: >
       sh -c "python manage.py migrate &&

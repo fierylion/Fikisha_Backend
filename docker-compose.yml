@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - HOST=publications.cj2olckjerwl.eu-north-1.rds.amazonaws.com
+      - HOST=${HOST}
       - USER=${USER}
-      - PASSWORD=fierylion
+      - PASSWORD=${PASSWORD}
     command: >
       sh -c "python manage.py migrate &&
              daphne -b 0.0.0.0 -p 8000 card_backend.asgi:application"

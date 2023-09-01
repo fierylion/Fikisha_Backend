@@ -30,6 +30,9 @@ class ProductRegistrationModal(models.Model):
     receiverPhone=models.CharField(max_length=400, null=False, blank=False)
     senderLocation=models.TextField(null=False, blank=False)
     receiverLocation=models.TextField(null=False, blank=False)
+    deliveryTime = models.CharField(max_length=400, null=False, blank=False)
+    payer=models.CharField(max_length=400, null=False, blank=False)
+    mode = models.CharField(max_length=400, null=False, blank=False)
     created_at=models.DateTimeField(auto_now_add=True)
     
 

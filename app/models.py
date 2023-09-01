@@ -33,6 +33,7 @@ class ProductRegistrationModal(models.Model):
     deliveryTime = models.CharField(max_length=400, null=False, blank=False)
     payer=models.CharField(max_length=400, null=False, blank=False)
     mode = models.CharField(max_length=400, null=False, blank=False)
+    amount=models.CharField(null=False, blank=False, max_length=20)
     created_at=models.DateTimeField(auto_now_add=True)
     
 

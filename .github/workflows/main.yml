@@ -1,0 +1,18 @@
+name: Deploy to Digital Ocean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SSH into the Droplet
+        run: |
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} "echo 'Logged in to the droplet'"

@@ -22,4 +22,4 @@ jobs:
           SSH_IP: ${{ secrets.SSH_IP }}
 
         run: |
-           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} "echo 'Logged in to the droplet'"
+           ssh root@$159.223.10.77 "echo 'Logged in to the droplet'"

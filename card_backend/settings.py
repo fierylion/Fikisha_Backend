@@ -59,7 +59,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "app.middlewares.user_authentication_middleware"
 ]
-
+CSRF_TRUSTED_ORIGINS = ['https://fikisha.fierylion.me']
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'card_backend.urls'

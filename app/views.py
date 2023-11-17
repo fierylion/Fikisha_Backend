@@ -438,6 +438,7 @@ class AgentView(ViewSet):
         user = request.user_details
         agent_id = user.id
         order = OrderDeliveryModal.objects.select_related('order_id', 'order_id__sender_id', 'order_id__receiver_id', 'order_id__sender_id__location_id', 'order_id__receiver_id__location_id').filter(agent_id=agent_id, order_id__status='accepted').first()
+        print(order)
         if(not order):
             return Response({"order":None, "status":"success"}, status=status.HTTP_200_OK)
         temp = model_to_dict(order)
